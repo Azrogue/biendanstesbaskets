@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bien dans ta tête, bien dans tes baskets !</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        html, body { /* Important pour s'assurer que 100vh fonctionne bien avec le snap */
+            height: 100%;
+            overflow-x: hidden; /* Évite les barres de défilement horizontales accidentelles */
+        }
+        body {
+            font-family: 'Nunito', sans-serif;
+            scroll-behavior: smooth; /* Gardez ceci pour les clics sur les liens d'ancrage */
+            /* NOUVEAU: Pour le scroll snapping */
+            scroll-snap-type: y mandatory;
+        }
+        .section {
+            min-height: 100vh; /* Chaque section prend au moins la hauteur de l'écran */
+            padding: 3rem 1rem; /* Augmentation du padding */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center; /* Centrer le texte par défaut */
+            /* NOUVEAU: Pour le scroll snapping */
+            scroll-snap-align: start;
+            /* Optionnel: pour forcer l'arrêt à chaque section même si le scroll est rapide */
+            /* scroll-snap-stop: always; */
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover {
+            transform: translateY(-3px);
+            font-weight: bold;
+        }
+        .character-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            margin-bottom: 1rem;
+        }
+         .character-avatar-large {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            margin-bottom: 1rem;
+        }
+        .qcm-option {
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+        .qcm-option:hover {
+            transform: scale(1.05);
+        }
+        .feedback {
+            margin-top: 1rem;
+            font-weight: bold;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+        }
+        .correct {
+            color: green;
+            background-color: #e6fffa;
+        }
+        .incorrect {
+            color: red;
+            background-color: #fff5f5;
+        }
+        .key-message {
+            font-size: 1.8rem;
+            font-weight: bold;
+            padding: 1rem;
+            border-radius: 8px;
+            display: inline-block;
+            margin: 1rem 0;
+        }
+        .emphasis-text {
+            font-size: 2.5rem;
+            font-weight: 900;
+            display: block;
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body class="bg-slate-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-3">
+            <div class="flex items-center justify-between">
+                <div class="text-2xl font-black text-blue-600">
+                    <i class="fas fa-brain mr-2"></i> Bien dans tes Baskets!
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="#accueil" class="nav-link text-blue-600 hover:text-blue-800">Accueil <i class="fas fa-users"></i></a>
+                    <a href="#kyllian" class="nav-link text-sky-600 hover:text-sky-800">Kyllian <i class="fas fa-user-graduate"></i></a>
+                    <a href="#idriss" class="nav-link text-amber-600 hover:text-amber-800">Idriss <i class="fas fa-user-tie"></i></a>
+                    <a href="#sarah" class="nav-link text-purple-600 hover:text-purple-800">Sarah <i class="fas fa-user-astronaut"></i></a>
+                    <a href="#alliah" class="nav-link text-orange-600 hover:text-orange-800">Alliah <i class="fas fa-user-ninja"></i></a>
+                    <a href="#conclusion" class="nav-link text-pink-600 hover:text-pink-800">Conclusion <i class="fas fa-flag-checkered"></i></a>
+                </div>
+                <button class="md:hidden focus:outline-none" id="mobile-menu-button">
+                    <i class="fas fa-bars text-blue-600 text-2xl"></i>
+                </button>
+            </div>
+            <div class="hidden md:hidden mt-3 space-y-1" id="mobile-menu">
+                <a href="#accueil" class="block px-3 py-2 rounded-md text-base font-medium text-blue-600 hover:bg-blue-50">Accueil <i class="fas fa-users"></i></a>
+                <a href="#kyllian" class="block px-3 py-2 rounded-md text-base font-medium text-sky-600 hover:bg-sky-50">Kyllian <i class="fas fa-user-graduate"></i></a>
+                <a href="#idriss" class="block px-3 py-2 rounded-md text-base font-medium text-amber-600 hover:bg-amber-50">Idriss <i class="fas fa-user-tie"></i></a>
+                <a href="#sarah" class="block px-3 py-2 rounded-md text-base font-medium text-purple-600 hover:bg-purple-50">Sarah <i class="fas fa-user-astronaut"></i></a>
+                <a href="#alliah" class="block px-3 py-2 rounded-md text-base font-medium text-orange-600 hover:bg-orange-50">Alliah <i class="fas fa-user-ninja"></i></a>
+                <a href="#conclusion" class="block px-3 py-2 rounded-md text-base font-medium text-pink-600 hover:bg-pink-50">Conclusion <i class="fas fa-flag-checkered"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- SLIDE 1: Salut ! Nous c'est Sandra, Naomie et Curtis -->
+    <section id="accueil" class="section bg-gradient-to-br from-teal-400 to-cyan-600 text-white">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-center space-x-4 mb-6">
+                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Avatar Sandra" class="character-avatar-large">
+                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135789.png" alt="Avatar Naomie" class="character-avatar-large">
+                <img src="https://cdn-icons-png.flaticon.com/512/3006/3006873.png" alt="Avatar Curtis" class="character-avatar-large">
+            </div>
+            <h1 class="text-4xl md:text-6xl font-black mb-8">Salut ! Nous c'est <br><span class="text-yellow-300">Sandra, Naomie et Curtis</span> 👋</h1>
+            <div class="bg-white/30 backdrop-blur-sm p-8 rounded-xl shadow-lg text-left space-y-4 text-lg max-w-2xl mx-auto">
+                <p><i class="fas fa-graduation-cap text-cyan-100 mr-3 fa-fw"></i> Étudiant(e)s en médecine, passionné(e)s par comment fonctionne le corps ET la tête ! 🤓</p>
+                <p><i class="fas fa-heartbeat text-red-300 mr-3 fa-fw"></i> Service Sanitaire : notre mission est d'aider les jeunes à prendre soin d'eux.</p>
+                <p><i class="fas fa-lightbulb text-yellow-300 mr-3 fa-fw"></i> Aujourd'hui : on va parler ensemble de trucs importants pour se sentir mieux ! 🚀</p>
+            </div>
+             <a href="#aventure" class="mt-12 inline-block bg-yellow-400 text-gray-800 px-8 py-4 rounded-full font-bold text-xl hover:bg-yellow-300 transition duration-300 shadow-lg">
+                <i class="fas fa-arrow-down mr-2"></i> Notre Aventure !
+            </a>
+        </div>
+    </section>
+
+    <!-- SLIDE 2: Notre Aventure du Jour -->
+    <section id="aventure" class="section bg-slate-100">
+        <div class="container mx-auto px-4">
+            <img src="https://cdn-icons-png.flaticon.com/512/3500/3500199.png" alt="Boussole colorée" class="w-32 h-32 mx-auto mb-8">
+            <h2 class="text-4xl md:text-5xl font-bold text-purple-600 mb-12">🗺️ Notre Aventure du Jour ! 🧭</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+                <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform">
+                    <img src="https://cdn-icons-png.flaticon.com/512/4207/4207247.png" alt="Kyllian avatar" class="character-avatar mx-auto">
+                    <h3 class="text-xl font-bold text-sky-700 mt-2 mb-1">Rencontre avec Kyllian <i class="fas fa-book-reader ml-1"></i></h3>
+                    <p class="text-gray-600">Quand l'école devient bof... (Décrochage)</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform">
+                     <img src="https://cdn-icons-png.flaticon.com/512/4207/4207221.png" alt="Idriss avatar" class="character-avatar mx-auto">
+                    <h3 class="text-xl font-bold text-amber-700 mt-2 mb-1">Les défis d'Idriss <i class="fas fa-weight-hanging ml-1"></i></h3>
+                    <p class="text-gray-600">Trop de pression ! (Pression scolaire)</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform">
+                    <img src="https://cdn-icons-png.flaticon.com/512/4207/4207270.png" alt="Sarah avatar" class="character-avatar mx-auto">
+                    <h3 class="text-xl font-bold text-purple-700 mt-2 mb-1">Sarah se questionne <i class="fas fa-question-circle ml-1"></i></h3>
+                    <p class="text-gray-600">Suis-je assez bien ? (Estime de soi)</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform">
+                     <img src="https://cdn-icons-png.flaticon.com/512/4207/4207283.png" alt="Alliah avatar" class="character-avatar mx-auto">
+                    <h3 class="text-xl font-bold text-orange-700 mt-2 mb-1">Alliah est débordée <i class="fas fa-running ml-1"></i></h3>
+                    <p class="text-gray-600">Au secours, le stress ! (Gestion du stress)</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- KYLLIAN - SLIDE 3: Thème 1 - Kyllian et l'École -->
+    <section id="kyllian" class="section bg-gradient-to-br from-sky-400 to-blue-600 text-white">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <img src="https://cdn-icons-png.flaticon.com/512/4207/4207247.png" alt="Kyllian avatar baillant" class="character-avatar-large mx-auto border-sky-200">
+            <h2 class="text-4xl md:text-5xl font-black mb-4">Thème 1 : Quand l'école devient bof... 📚😕</h2>
+            <p class="text-xl md:text-2xl mb-8 font-light">"Kyllian a un souci avec l'école, découvrons ensemble."</p>
+
+            <div class="bg-white/20 backdrop-blur-sm p-6 rounded-lg shadow-md text-left mb-8">
+                <h3 class="text-2xl font-bold mb-3 text-center">Voici Kyllian !</h3>
+                <ul class="space-y-2 text-lg">
+                    <li><i class="fas fa-star text-yellow-300 mr-2"></i> Adorait l'école avant.</li>
+                    <li><i class="fas fa-chart-line-down text-red-300 mr-2"></i> Maintenant en 5ème : ennui, notes qui baissent.</li>
+                    <li><i class="fas fa-book-dead text-gray-300 mr-2"></i> Oublie ses devoirs, se sent incompris.</li>
+                    <li><i class="fas fa-question-circle text-sky-300 mr-2"></i> Pense "à quoi bon ?" et s'isole.</li>
+                </ul>
+                 <img src="https://cdn-icons-png.flaticon.com/512/2830/2830294.png" alt="Kyllian songeur" class="w-40 h-40 mx-auto mt-4 opacity-80">
+            </div>
+        </div>
+    </section>
+
+    <!-- KYLLIAN - SLIDE 5, 6, 7: QCM Kyllian -->
+    <section class="section bg-gradient-to-br from-sky-400 to-blue-600 text-white">
+        <div class="container mx-auto px-4 max-w-3xl space-y-10">
+            <div class="qcm-container bg-white/90 backdrop-blur-sm text-gray-800 p-6 rounded-lg shadow-xl w-full">
+                <h3 class="text-2xl font-bold text-sky-700 mb-4"><i class="fas fa-search mr-2"></i> Question pour les détectives ! (1/3)</h3>
+                <p class="text-lg font-semibold mb-3">Selon toi, comment se sent Kyllian principalement ?</p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <button class="qcm-option bg-sky-100 hover:bg-sky-200 p-3 rounded-md">a) Joyeux et motivé 😄</button>
+                    <button class="qcm-option bg-sky-100 hover:bg-sky-200 p-3 rounded-md">b) Fatigué et un peu triste 😟</button>
+                    <button class="qcm-option bg-sky-100 hover:bg-sky-200 p-3 rounded-md" data-correct="true">c) Ennuyé et découragé 😒</button>
+                </div>
+                <div class="feedback hidden"></div>
+            </div>
+
+            <div class="qcm-container bg-white/90 backdrop-blur-sm text-gray-800 p-6 rounded-lg shadow-xl w-full">
+                <h3 class="text-2xl font-bold text-sky-700 mb-4"><i class="fas fa-search mr-2"></i> Question pour les détectives ! (2/3)</h3>
+                <p class="text-lg font-semibold mb-3">Qu'est-ce qui pourrait expliquer que Kyllian se désintéresse de l'école ?</p>
+                <div class="grid grid-cols-1 gap-3">
+                    <button class="qcm-option bg-sky-100 hover:bg-sky-200 p-3 rounded-md text-left">a) Il est devenu paresseux d'un coup. 😴</button>
+                    <button class="qcm-option bg-sky-100 hover:bg-sky-200 p-3 rounded-md text-left">b) Il ne comprend plus bien les cours et a peur de demander de l'aide. 😥</button>
+                    <button class="qcm-option bg-sky-100 hover:bg-sky-200 p-3 rounded-md text-left">c) Ses amis l'influencent négativement. 👥</button>
+                    <button class="qcm-option bg-sky-100 hover:bg-sky-200 p-3 rounded-md text-left" data-correct="true">d) Peut-être un peu de tout ça, ou autre chose ? 🤔❓</button>
+                </div>
+                <div class="feedback hidden"></div>
+            </div>
+
+             <div class="qcm-container bg-white/90 backdrop-blur-sm text-gray-800 p-6 rounded-lg shadow-xl w-full">
+                <h3 class="text-2xl font-bold text-sky-700 mb-4"><i class="fas fa-search mr-2"></i> Question pour les détectives ! (3/3)</h3>
+                <p class="text-lg font-semibold mb-3">Si Kyllian était ton ami, que lui conseillerais-tu en premier ?</p>
+                <div class="grid grid-cols-1 gap-3">
+                    <button class="qcm-option bg-sky-100 hover:bg-sky-200 p-3 rounded-md text-left">a) De sécher les cours qui l'ennuient. 💨</button>
+                    <button class="qcm-option bg-sky-100 hover:bg-sky-200 p-3 rounded-md text-left" data-correct="true">b) D'en parler à un adulte en qui il a confiance. 🗣️🤝</button>
+                    <button class="qcm-option bg-sky-100 hover:bg-sky-200 p-3 rounded-md text-left">c) De ne rien dire et d'attendre que ça passe. ⏳</button>
+                </div>
+                <div class="feedback hidden"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- KYLLIAN - SLIDE 8 & 9: Solutions & Récap -->
+    <section class="section bg-gradient-to-br from-sky-400 to-blue-600 text-white">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <img src="https://cdn-icons-png.flaticon.com/512/1257/1257365.png" alt="Ampoule idée" class="w-24 h-24 mx-auto mb-6">
+            <h2 class="text-3xl md:text-4xl font-bold mb-8">💡 Ensemble, on aide Kyllian ! 🤝</h2>
+            <div class="bg-white/20 backdrop-blur-sm p-6 rounded-lg shadow-md text-left mb-10 space-y-4 text-lg">
+                <p><i class="fas fa-comments text-yellow-300 fa-fw mr-2 text-2xl"></i> <strong class="text-yellow-300 text-xl">EN PARLER !</strong> (Parents, prof, infirmière...)</p>
+                <p><i class="fas fa-search text-green-300 fa-fw mr-2 text-2xl"></i> Comprendre pourquoi (difficultés ? ennui ? problèmes ?)</p>
+                <p><i class="fas fa-shoe-prints text-red-300 fa-fw mr-2 text-2xl"></i> Se fixer de <strong class="text-xl">PETITS</strong> objectifs (UN exercice, UNE participation).</p>
+                <p><i class="fas fa-seedling text-lime-300 fa-fw mr-2 text-2xl"></i> École = apprendre et <strong class="text-xl">GRANDIR</strong> ! 🌱</p>
+            </div>
+
+            <div class="bg-yellow-400 text-gray-800 p-6 rounded-lg shadow-xl">
+                <h3 class="text-2xl font-black mb-3"><i class="fas fa-award mr-2"></i> Démotivation : Ce qu'on retient !</h3>
+                <ul class="space-y-2 text-left text-lg">
+                    <li><i class="fas fa-check-circle text-sky-700 mr-2"></i> Se sentir démotivé, ça arrive à <strong class="text-xl">TOUT LE MONDE</strong>.</li>
+                    <li><i class="fas fa-check-circle text-sky-700 mr-2"></i> Le + important : <strong class="text-xl">NE PAS RESTER SEUL</strong> et <strong class="text-xl">EN PARLER !</strong></li>
+                    <li><i class="fas fa-check-circle text-sky-700 mr-2"></i> Chercher de l'aide, c'est être <strong class="text-xl">COURAGEUX</strong> ! 💪🌟</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- IDRISS - SLIDE 10 & 11: Thème 2 - Idriss et la Pression -->
+    <section id="idriss" class="section bg-gradient-to-br from-amber-400 to-orange-600 text-white">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <img src="https://cdn-icons-png.flaticon.com/512/4207/4207221.png" alt="Idriss avatar stressé" class="character-avatar-large mx-auto border-amber-200">
+            <h2 class="text-4xl md:text-5xl font-black mb-4">Thème 2 : Trop de pression pour Idriss ! 📚🤯</h2>
+            
+            <div class="bg-white/20 backdrop-blur-sm p-6 rounded-lg shadow-md text-left mb-8">
+                <h3 class="text-2xl font-bold mb-3 text-center">Voici Idriss !</h3>
+                <ul class="space-y-2 text-lg">
+                    <li><i class="fas fa-medal text-yellow-300 mr-2"></i> Bon élève. Ses parents sont fiers, il veut toujours bien faire.</li>
+                    <li><i class="fas fa-user-secret text-purple-300 mr-2"></i> Peur de décevoir.</li>
+                    <li><i class="fas fa-bed text-red-300 mr-2"></i> Mal au ventre, dort mal avant chaque contrôle.</li>
+                    <li><i class="fas fa-exclamation-triangle text-orange-300 mr-2"></i> Stresse énormément, même s'il a bien révisé. Se compare beaucoup.</li>
+                </ul>
+                <img src="https://cdn-icons-png.flaticon.com/512/3197/3197297.png" alt="Idriss sous une pile de livres" class="w-40 h-40 mx-auto mt-4 opacity-80">
+            </div>
+        </div>
+    </section>
+
+    <!-- IDRISS - SLIDE 12, 13, 14: QCM Idriss -->
+    <section class="section bg-gradient-to-br from-amber-400 to-orange-600 text-white">
+        <div class="container mx-auto px-4 max-w-3xl space-y-10">
+            <div class="qcm-container bg-white/90 backdrop-blur-sm text-gray-800 p-6 rounded-lg shadow-xl w-full">
+                <h3 class="text-2xl font-bold text-amber-700 mb-4"><i class="fas fa-question-circle mr-2"></i> À ton avis... (1/3)</h3>
+                <p class="text-lg font-semibold mb-3">Qu'est-ce qu'Idriss ressent le plus souvent à l'école ?</p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <button class="qcm-option bg-amber-100 hover:bg-amber-200 p-3 rounded-md">a) De la détente et de la curiosité. 🦋</button>
+                    <button class="qcm-option bg-amber-100 hover:bg-amber-200 p-3 rounded-md" data-correct="true">b) De l'anxiété et de la peur de l'échec. ☁️😟</button>
+                    <button class="qcm-option bg-amber-100 hover:bg-amber-200 p-3 rounded-md">c) De l'indifférence. 😐</button>
+                </div>
+                <div class="feedback hidden"></div>
+            </div>
+
+            <div class="qcm-container bg-white/90 backdrop-blur-sm text-gray-800 p-6 rounded-lg shadow-xl w-full">
+                <h3 class="text-2xl font-bold text-amber-700 mb-4"><i class="fas fa-question-circle mr-2"></i> À ton avis... (2/3)</h3>
+                <p class="text-lg font-semibold mb-3">Cette "pression" que ressent Idriss, d'où peut-elle venir ?</p>
+                <div class="grid grid-cols-1 gap-3">
+                    <button class="qcm-option bg-amber-100 hover:bg-amber-200 p-3 rounded-md text-left">a) Uniquement de ses professeurs. 👨‍🏫</button>
+                    <button class="qcm-option bg-amber-100 hover:bg-amber-200 p-3 rounded-md text-left">b) De lui-même, car il veut être parfait. ✨</button>
+                    <button class="qcm-option bg-amber-100 hover:bg-amber-200 p-3 rounded-md text-left">c) De ses parents qui attendent beaucoup de lui. 👨‍👩‍👧‍👦</button>
+                    <button class="qcm-option bg-amber-100 hover:bg-amber-200 p-3 rounded-md text-left" data-correct="true">d) Un peu de tout ça, et de la comparaison avec les autres. 🔄🎯</button>
+                </div>
+                <div class="feedback hidden"></div>
+            </div>
+
+            <div class="qcm-container bg-white/90 backdrop-blur-sm text-gray-800 p-6 rounded-lg shadow-xl w-full">
+                <h3 class="text-2xl font-bold text-amber-700 mb-4"><i class="fas fa-question-circle mr-2"></i> À ton avis... (3/3)</h3>
+                <p class="text-lg font-semibold mb-3">Pour aider Idriss à se sentir moins stressé, on pourrait lui dire :</p>
+                <div class="grid grid-cols-1 gap-3">
+                    <button class="qcm-option bg-amber-100 hover:bg-amber-200 p-3 rounded-md text-left">a) "Arrête de stresser, ce n'est qu'une note !" 🙄</button>
+                    <button class="qcm-option bg-amber-100 hover:bg-amber-200 p-3 rounded-md text-left" data-correct="true">b) "L'important c'est de faire de son mieux, pas d'être parfait. Une erreur, ce n'est pas grave." 👍💬</button>
+                    <button class="qcm-option bg-amber-100 hover:bg-amber-200 p-3 rounded-md text-left">c) "Tu devrais travailler encore plus dur." 😓</button>
+                </div>
+                <div class="feedback hidden"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- IDRISS - SLIDE 15 & 16: Solutions & Récap -->
+    <section class="section bg-gradient-to-br from-amber-400 to-orange-600 text-white">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <img src="https://cdn-icons-png.flaticon.com/512/2883/2883908.png" alt="Personnage qui souffle" class="w-24 h-24 mx-auto mb-6">
+            <h2 class="text-3xl md:text-4xl font-bold mb-8">💨 Comment Idriss peut souffler un peu ? 🧘‍♂️</h2>
+            <div class="bg-white/20 backdrop-blur-sm p-6 rounded-lg shadow-md text-left mb-10 space-y-4 text-lg">
+                <p><i class="fas fa-balance-scale text-sky-300 fa-fw mr-2 text-2xl"></i> <strong class="text-xl">RELATIVISER :</strong> Une note ≠ Ta valeur. L'erreur aide à apprendre.</p>
+                <p><i class="fas fa-mountain text-green-300 fa-fw mr-2 text-2xl"></i> Se concentrer sur l'<strong class="text-xl">EFFORT</strong>, pas que le résultat.</p>
+                <p><i class="fas fa-comments text-yellow-300 fa-fw mr-2 text-2xl"></i> <strong class="text-xl">EN PARLER</strong> (parents, profs).</p>
+                <p><i class="fas fa-calendar-check text-purple-300 fa-fw mr-2 text-2xl"></i> S'<strong class="text-xl">ORGANISER</strong> pour moins stresser.</p>
+                <p><i class="fas fa-lungs text-teal-300 fa-fw mr-2 text-2xl"></i> Petite ASTUCE : <strong class="text-xl">Respirer profondément</strong>.</p>
+            </div>
+
+            <div class="bg-yellow-400 text-gray-800 p-6 rounded-lg shadow-xl">
+                <h3 class="text-2xl font-black mb-3"><i class="fas fa-award mr-2"></i> Pression : Ce qu'on retient !</h3>
+                <ul class="space-y-2 text-left text-lg">
+                    <li><i class="fas fa-check-circle text-amber-700 mr-2"></i> Vouloir bien faire, c'est OK. La <strong class="text-xl">PERFECTION</strong>, ça n'existe pas ! ✨</li>
+                    <li><i class="fas fa-check-circle text-amber-700 mr-2"></i> Ton <strong class="text-xl">MIEUX</strong> est suffisant. 👍</li>
+                    <li><i class="fas fa-check-circle text-amber-700 mr-2"></i> Parler de son stress, ça aide <strong class="text-xl">VRAIMENT</strong>. 💬🎗️</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- SARAH - SLIDE 17 & 18: Thème 3 - Sarah et la Confiance en Soi -->
+    <section id="sarah" class="section bg-gradient-to-br from-purple-400 to-indigo-600 text-white">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <img src="https://cdn-icons-png.flaticon.com/512/4207/4207270.png" alt="Sarah avatar triste miroir" class="character-avatar-large mx-auto border-purple-200">
+            <h2 class="text-4xl md:text-5xl font-black mb-4">Thème 3 : Sarah doute d'elle... 🤔❤️</h2>
+            
+            <div class="bg-white/20 backdrop-blur-sm p-6 rounded-lg shadow-md text-left mb-8">
+                <h3 class="text-2xl font-bold mb-3 text-center">Voici Sarah !</h3>
+                <ul class="space-y-2 text-lg">
+                    <li><i class="fas fa-question text-red-300 mr-2"></i> Se trouve souvent "nulle".</li>
+                    <li><i class="fas fa-dice text-gray-300 mr-2"></i> Réussite = chance. Échec = "je suis trop bête".</li>
+                    <li><i class="fas fa-microphone-slash text-sky-300 mr-2"></i> N'ose pas prendre la parole ou essayer de nouvelles activités (peur du ridicule).</li>
+                    <li><i class="fas fa-users text-orange-300 mr-2"></i> Se compare beaucoup aux autres (qu'elle trouve "mieux").</li>
+                </ul>
+                <img src="https://cdn-icons-png.flaticon.com/512/2919/2919015.png" alt="Sarah avec nuage noir" class="w-40 h-40 mx-auto mt-4 opacity-80">
+            </div>
+        </div>
+    </section>
+
+    <!-- SARAH - SLIDE 19, 20, 21: QCM Sarah -->
+    <section class="section bg-gradient-to-br from-purple-400 to-indigo-600 text-white">
+        <div class="container mx-auto px-4 max-w-3xl space-y-10">
+            <div class="qcm-container bg-white/90 backdrop-blur-sm text-gray-800 p-6 rounded-lg shadow-xl w-full">
+                <h3 class="text-2xl font-bold text-purple-700 mb-4"><i class="fas fa-heartbeat mr-2"></i> C'est quoi ça ? (1/3)</h3>
+                <p class="text-lg font-semibold mb-3">L'estime de soi, c'est un peu comme...</p>
+                <div class="grid grid-cols-1 gap-3">
+                    <button class="qcm-option bg-purple-100 hover:bg-purple-200 p-3 rounded-md text-left">a) La popularité qu'on a auprès des autres. ⭐</button>
+                    <button class="qcm-option bg-purple-100 hover:bg-purple-200 p-3 rounded-md text-left" data-correct="true">b) L'amour et le respect qu'on a pour soi-même, même avec ses défauts. ❤️MOI</button>
+                    <button class="qcm-option bg-purple-100 hover:bg-purple-200 p-3 rounded-md text-left">c) Avoir toujours les meilleures notes. 💯</button>
+                </div>
+                <div class="feedback hidden"></div>
+            </div>
+
+            <div class="qcm-container bg-white/90 backdrop-blur-sm text-gray-800 p-6 rounded-lg shadow-xl w-full">
+                <h3 class="text-2xl font-bold text-purple-700 mb-4"><i class="fas fa-heartbeat mr-2"></i> C'est quoi ça ? (2/3)</h3>
+                <p class="text-lg font-semibold mb-3">Quand Sarah se dit "je suis nulle", qu'est-ce que ça montre ?</p>
+                <div class="grid grid-cols-1 gap-3">
+                    <button class="qcm-option bg-purple-100 hover:bg-purple-200 p-3 rounded-md text-left">a) Qu'elle est réaliste. 😐</button>
+                    <button class="qcm-option bg-purple-100 hover:bg-purple-200 p-3 rounded-md text-left" data-correct="true">b) Qu'elle a une faible estime d'elle-même. 📉💔</button>
+                    <button class="qcm-option bg-purple-100 hover:bg-purple-200 p-3 rounded-md text-left">c) Qu'elle n'essaie pas assez. 🤷‍♀️</button>
+                </div>
+                <div class="feedback hidden"></div>
+            </div>
+
+            <div class="qcm-container bg-white/90 backdrop-blur-sm text-gray-800 p-6 rounded-lg shadow-xl w-full">
+                <h3 class="text-2xl font-bold text-purple-700 mb-4"><i class="fas fa-heartbeat mr-2"></i> C'est quoi ça ? (3/3)</h3>
+                <p class="text-lg font-semibold mb-3">Pour aider Sarah à se sentir mieux avec elle-même, on pourrait lui conseiller de :</p>
+                <div class="grid grid-cols-1 gap-3">
+                    <button class="qcm-option bg-purple-100 hover:bg-purple-200 p-3 rounded-md text-left">a) Se cacher pour ne pas qu'on voie ses défauts. 🙈</button>
+                    <button class="qcm-option bg-purple-100 hover:bg-purple-200 p-3 rounded-md text-left" data-correct="true">b) Essayer de lister 3 choses qu'elle aime chez elle ou qu'elle fait bien. 📝🌟☀️</button>
+                    <button class="qcm-option bg-purple-100 hover:bg-purple-200 p-3 rounded-md text-left">c) Critiquer les autres pour se sentir supérieure. 😠</button>
+                </div>
+                <div class="feedback hidden"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SARAH - SLIDE 22 & 23: Solutions & Récap -->
+    <section class="section bg-gradient-to-br from-purple-400 to-indigo-600 text-white">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <img src="https://cdn-icons-png.flaticon.com/512/3022/3022119.png" alt="Super-héros enfant" class="w-24 h-24 mx-auto mb-6">
+            <h2 class="text-3xl md:text-4xl font-bold mb-8">🚀 Comment Sarah peut croire plus en elle ? 💪</h2>
+            <div class="bg-white/20 backdrop-blur-sm p-6 rounded-lg shadow-md text-left mb-10 space-y-3 text-lg">
+                <p><i class="fas fa-spa text-yellow-300 fa-fw mr-2 text-2xl"></i> Identifier ses <strong class="text-xl">FORCES</strong> et <strong class="text-xl">QUALITÉS</strong> (fleur des qualités).</p>
+                <p><i class="fas fa-eraser text-pink-300 fa-fw mr-2 text-2xl"></i> Accepter ses <strong class="text-xl">ERREURS</strong> (c'est comme ça qu'on apprend).</p>
+                <p><i class="fas fa-medal text-orange-300 fa-fw mr-2 text-2xl"></i> Se <strong class="text-xl">FÉLICITER</strong> pour ses efforts (même petits).</p>
+                <p><i class="fas fa-puzzle-piece text-red-300 fa-fw mr-2 text-2xl"></i> <strong class="text-xl">STOP</strong> à la comparaison ! Chacun est <strong class="text-xl">UNIQUE</strong>.</p>
+                <p><i class="fas fa-users text-green-300 fa-fw mr-2 text-2xl"></i> S'entourer d'<strong class="text-xl">AMIS POSITIFS</strong>.</p>
+                <p><i class="fas fa-shoe-prints transform rotate-90 text-sky-300 fa-fw mr-2 text-2xl"></i> <strong class="text-xl">OSER</strong> essayer !</p>
+            </div>
+
+            <div class="bg-yellow-400 text-gray-800 p-6 rounded-lg shadow-xl">
+                <h3 class="text-2xl font-black mb-3"><i class="fas fa-award mr-2"></i> Estime de Soi : Ce qu'on retient !</h3>
+                <ul class="space-y-2 text-left text-lg">
+                    <li><i class="fas fa-heart text-purple-700 mr-2"></i> <strong class="text-xl">TU AS DE LA VALEUR</strong>, exactement comme tu es.💖</li>
+                    <li><i class="fas fa-key text-purple-700 mr-2"></i> Connaître tes forces, accepter tes faiblesses : c'est la <strong class="text-xl">CLÉ</strong> ! 🔑</li>
+                    <li><i class="fas fa-hand-holding-heart text-purple-700 mr-2"></i> Sois ton/ta <strong class="text-xl">meilleur(e) ami(e) !</strong> 🤗 <!-- Miroir emoji was not rendering well, replaced --></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- ALLIAH - SLIDE 24 & 25: Thème 4 - Alliah et le Tourbillon du Stress -->
+    <section id="alliah" class="section bg-gradient-to-br from-orange-400 to-red-600 text-white">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <img src="https://cdn-icons-png.flaticon.com/512/4207/4207283.png" alt="Alliah avatar stressée" class="character-avatar-large mx-auto border-orange-200">
+            <h2 class="text-4xl md:text-5xl font-black mb-4">Thème 4 : Alliah est super stressée ! 🌪️😫</h2>
+            
+            <div class="bg-white/20 backdrop-blur-sm p-6 rounded-lg shadow-md text-left mb-8">
+                <h3 class="text-2xl font-bold mb-3 text-center">Voici Alliah !</h3>
+                <ul class="space-y-2 text-lg">
+                    <li><i class="fas fa-tasks text-sky-300 mr-2"></i> Impression d'avoir mille choses à faire (cours, devoirs, club, amis...).</li>
+                    <li><i class="fas fa-exclamation-circle text-yellow-300 mr-2"></i> Parfois, tout lui semble trop.</li>
+                    <li><i class="fas fa-poo-storm text-red-300 mr-2"></i> Souvent une "boule au ventre", s'énerve facilement pour un rien.</li>
+                    <li><i class="fas fa-head-side-cough text-purple-300 mr-2"></i> Du mal à se concentrer en classe. Se sent débordée.</li>
+                </ul>
+                 <img src="https://cdn-icons-png.flaticon.com/512/2884/2884009.png" alt="Alliah jonglant" class="w-40 h-40 mx-auto mt-4 opacity-80">
+            </div>
+        </div>
+    </section>
+
+    <!-- ALLIAH - SLIDE 26, 27, 28: QCM Alliah -->
+    <section class="section bg-gradient-to-br from-orange-400 to-red-600 text-white">
+        <div class="container mx-auto px-4 max-w-3xl space-y-10">
+            <div class="qcm-container bg-white/90 backdrop-blur-sm text-gray-800 p-6 rounded-lg shadow-xl w-full">
+                <h3 class="text-2xl font-bold text-orange-700 mb-4"><i class="fas fa-yin-yang mr-2"></i> Le Stress, ami ou ennemi ? (1/3)</h3>
+                <p class="text-lg font-semibold mb-3">Le stress, c'est toujours négatif ?</p>
+                <div class="grid grid-cols-1 gap-3">
+                    <button class="qcm-option bg-orange-100 hover:bg-orange-200 p-3 rounded-md text-left">a) Oui, il faut l'éviter à tout prix. 🚫</button>
+                    <button class="qcm-option bg-orange-100 hover:bg-orange-200 p-3 rounded-md text-left" data-correct="true">b) Non, un peu de stress peut aider à être performant (le "bon stress"). 👍🎯</button>
+                    <button class="qcm-option bg-orange-100 hover:bg-orange-200 p-3 rounded-md text-left">c) Le stress n'existe pas vraiment. 👻</button>
+                </div>
+                <div class="feedback hidden"></div>
+            </div>
+
+            <div class="qcm-container bg-white/90 backdrop-blur-sm text-gray-800 p-6 rounded-lg shadow-xl w-full">
+                <h3 class="text-2xl font-bold text-orange-700 mb-4"><i class="fas fa-yin-yang mr-2"></i> Le Stress, ami ou ennemi ? (2/3)</h3>
+                <p class="text-lg font-semibold mb-3">Quand Alliah se sent débordée, comment son corps peut-il réagir ?</p>
+                <div class="grid grid-cols-1 gap-3">
+                    <button class="qcm-option bg-orange-100 hover:bg-orange-200 p-3 rounded-md text-left">a) Elle se sent pleine d'énergie et joyeuse. 😄⚡</button>
+                    <button class="qcm-option bg-orange-100 hover:bg-orange-200 p-3 rounded-md text-left" data-correct="true">b) Elle peut avoir mal au ventre 🤢, mal à la tête 🤕, être irritable 😠.</button>
+                    <button class="qcm-option bg-orange-100 hover:bg-orange-200 p-3 rounded-md text-left">c) Elle n'a aucune réaction physique. 🤷‍♀️</button>
+                </div>
+                <div class="feedback hidden"></div>
+            </div>
+
+            <div class="qcm-container bg-white/90 backdrop-blur-sm text-gray-800 p-6 rounded-lg shadow-xl w-full">
+                <h3 class="text-2xl font-bold text-orange-700 mb-4"><i class="fas fa-yin-yang mr-2"></i> Le Stress, ami ou ennemi ? (3/3)</h3>
+                <p class="text-lg font-semibold mb-3">Quelle petite chose Alliah pourrait-elle essayer quand elle sent le stress monter ?</p>
+                <div class="grid grid-cols-1 gap-3">
+                    <button class="qcm-option bg-orange-100 hover:bg-orange-200 p-3 rounded-md text-left">a) Crier sur la première personne qui passe. 🤬</button>
+                    <button class="qcm-option bg-orange-100 hover:bg-orange-200 p-3 rounded-md text-left" data-correct="true">b) Prendre 3 grandes respirations lentes et profondes. 🌬️😌</button>
+                    <button class="qcm-option bg-orange-100 hover:bg-orange-200 p-3 rounded-md text-left">c) Faire comme si de rien n'était. 🎭</button>
+                </div>
+                <div class="feedback hidden"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ALLIAH - SLIDE 29 & 30: Solutions & Récap -->
+    <section class="section bg-gradient-to-br from-orange-400 to-red-600 text-white">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <img src="https://cdn-icons-png.flaticon.com/512/3063/3063822.png" alt="Boîte à outils" class="w-24 h-24 mx-auto mb-6">
+            <h2 class="text-3xl md:text-4xl font-bold mb-8">🛠️ Alliah apprend à gérer son stress ! 🌬️</h2>
+            <div class="bg-white/20 backdrop-blur-sm p-6 rounded-lg shadow-md text-left mb-10 space-y-3 text-lg">
+                <p><i class="fas fa-lungs text-sky-300 fa-fw mr-2 text-2xl"></i> <strong class="text-xl">RESPIRER :</strong> La magie de la respiration (mini-exo).</p>
+                <p><i class="fas fa-person-running text-green-300 fa-fw mr-2 text-2xl"></i> <strong class="text-xl">BOUGER :</strong> Le sport, ça défoule !</p>
+                <p><i class="fas fa-comments text-yellow-300 fa-fw mr-2 text-2xl"></i> <strong class="text-xl">EN PARLER :</strong> Dire ce qui stresse.</p>
+                <p><i class="fas fa-list-check text-purple-300 fa-fw mr-2 text-2xl"></i> <strong class="text-xl">S'ORGANISER :</strong> Une chose à la fois.</p>
+                <p><i class="fas fa-mug-hot text-pink-300 fa-fw mr-2 text-2xl"></i> <strong class="text-xl">FAIRE DES PAUSES :</strong> Activités plaisir.</p>
+                <p><i class="fas fa-bed text-indigo-300 fa-fw mr-2 text-2xl"></i> <strong class="text-xl">BIEN DORMIR :</strong> Essentiel !</p>
+            </div>
+
+            <div class="bg-yellow-400 text-gray-800 p-6 rounded-lg shadow-xl">
+                <h3 class="text-2xl font-black mb-3"><i class="fas fa-award mr-2"></i> Gestion du Stress : Ce qu'on retient !</h3>
+                <ul class="space-y-2 text-left text-lg">
+                    <li><i class="fas fa-check-circle text-orange-700 mr-2"></i> Le stress est une réaction <strong class="text-xl">NORMALE</strong>, mais on peut apprendre à le gérer.</li>
+                    <li><i class="fas fa-tools text-orange-700 mr-2"></i> Des outils <strong class="text-xl">SIMPLES</strong> (respirer, bouger, parler) peuvent beaucoup aider.</li>
+                    <li><i class="fas fa-life-ring text-orange-700 mr-2"></i> N'hésite pas à demander de l'<strong class="text-xl">AIDE</strong> si tu te sens débordé(e). 🛡️</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONCLUSION - SLIDE 31: Le Message Super Important ! -->
+    <section id="conclusion" class="section bg-gradient-to-br from-pink-500 to-rose-600 text-white">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <img src="https://cdn-icons-png.flaticon.com/512/2913/2913320.png" alt="Mains se tenant" class="w-32 h-32 mx-auto mb-6 animate-pulse">
+            <h2 class="text-4xl md:text-6xl font-black mb-8">Vous n'êtes <span class="underline decoration-yellow-400 decoration-wavy">PAS SEULS</span> ! 🫂</h2>
+            <div class="bg-white/30 backdrop-blur-sm p-6 rounded-lg shadow-md text-lg space-y-3 mb-10">
+                <p><i class="fas fa-heartbeat text-red-300 mr-2"></i> Tes émotions sont <strong class="text-xl">IMPORTANTES</strong>.</p>
+                <p><i class="fas fa-thumbs-up text-green-300 mr-2"></i> Ce n'est <strong class="text-xl">PAS GRAVE</strong> de ne pas aller bien parfois.</p>
+                <p class="key-message bg-yellow-400 text-gray-800 !text-2xl">
+                    <i class="fas fa-microphone-alt mr-2"></i> Le plus important : <span class="emphasis-text text-rose-600">EN PARLER !</span>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONCLUSION - SLIDE 32: À Qui Parler ? (Ressources) -->
+    <section class="section bg-gradient-to-br from-pink-500 to-rose-600 text-white">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <img src="https://cdn-icons-png.flaticon.com/512/1041/1041916.png" alt="Bulles de parole" class="w-24 h-24 mx-auto mb-6">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-10">🗣️ À qui je peux en parler ?</h2>
+            <div class="bg-white/90 backdrop-blur-sm text-gray-800 p-8 rounded-lg shadow-xl w-full">
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-4 text-lg">
+                    <div class="bg-rose-100 p-3 rounded-md flex items-center"><i class="fas fa-home mr-3 text-rose-500 text-2xl"></i>Parents</div>
+                    <div class="bg-rose-100 p-3 rounded-md flex items-center"><i class="fas fa-user-friends mr-3 text-rose-500 text-2xl"></i>Amis (confiance)</div>
+                    <div class="bg-rose-100 p-3 rounded-md flex items-center"><i class="fas fa-chalkboard-teacher mr-3 text-rose-500 text-2xl"></i>Professeurs</div>
+                    <div class="bg-rose-100 p-3 rounded-md flex items-center"><i class="fas fa-user-nurse mr-3 text-rose-500 text-2xl"></i>Infirmière Scolaire</div>
+                    <div class="bg-rose-100 p-3 rounded-md flex items-center"><i class="fas fa-user-tie mr-3 text-rose-500 text-2xl"></i>CPE</div>
+                    <div class="bg-rose-100 p-3 rounded-md flex items-center"><i class="fas fa-hands-helping mr-3 text-rose-500 text-2xl"></i>Adulte de confiance</div>
+                    <div class="bg-rose-100 p-3 rounded-md col-span-full sm:col-auto flex items-center"><i class="fas fa-phone-alt mr-3 text-rose-500 text-2xl"></i>3020 (Harcèlement)</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONCLUSION - SLIDE 33: Alors, la Santé Mentale, c'est quoi ? -->
+    <section class="section bg-gradient-to-br from-pink-500 to-rose-600 text-white">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <img src="https://cdn-icons-png.flaticon.com/512/2966/2966311.png" alt="Balance équilibrée" class="w-24 h-24 mx-auto mb-6">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-10">💡 Finalement, la Santé Mentale, c'est...</h2>
+            <div class="bg-white/30 backdrop-blur-sm p-8 rounded-lg shadow-md text-lg space-y-4 text-left">
+                <p>C'est se sentir bien :</p>
+                <ul class="list-disc list-inside ml-4 space-y-2">
+                    <li>Dans sa <strong class="text-xl text-yellow-300">tête</strong> (ses pensées - <span class="italic">comme pour Kyllian</span> <i class="fas fa-brain text-yellow-300"></i>)</li>
+                    <li>Dans son <strong class="text-xl text-yellow-300">cœur</strong> (ses émotions - <span class="italic">comme pour Idriss ou Sarah</span> <i class="fas fa-heart text-yellow-300"></i>)</li>
+                    <li>Avec les <strong class="text-xl text-yellow-300">autres</strong> (ses amis, sa famille - <span class="italic">comme pour Alliah</span> <i class="fas fa-users text-yellow-300"></i>)</li>
+                </ul>
+                <p class="mt-4"><i class="fas fa-balance-scale-right mr-2"></i> C'est aussi important que la santé du corps !</p>
+                <p class="key-message bg-yellow-400 text-gray-800 !text-xl mt-4">
+                    Et on peut tous agir pour prendre soin de la nôtre et de celle des autres ! 🤝💖
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONCLUSION - SLIDE 34 & 35: Un Dernier Mot & Questions -->
+    <section class="section bg-slate-100">
+        <div class="container mx-auto px-4 max-w-3xl space-y-12">
+            <div>
+                <img src="https://cdn-icons-png.flaticon.com/512/1688/1688450.png" alt="Soleil souriant" class="w-24 h-24 mx-auto mb-6">
+                <h2 class="text-3xl md:text-4xl font-bold text-purple-600 mb-6">Prenez Soin de Vous (et des Autres !) 🥰</h2>
+                <p class="text-2xl md:text-3xl text-gray-700 font-semibold italic">
+                    "Être bienveillant avec soi-même et avec les autres, c'est le début du bonheur !"
+                </p>
+            </div>
+            <hr class="my-10 border-gray-300">
+            <div>
+                <img src="https://cdn-icons-png.flaticon.com/512/5691/5691378.png" alt="Point d'interrogation et smiley" class="w-24 h-24 mx-auto mb-6">
+                <h2 class="text-4xl md:text-5xl font-black text-purple-600 mb-6">Des Questions ? 🤔</h2>
+                <p class="text-xl md:text-2xl text-gray-700 font-semibold">
+                    Merci beaucoup pour votre écoute et votre participation de la part de <br>
+                    <span class="text-blue-600 font-bold">Sandra</span>, <span class="text-amber-600 font-bold">Naomie</span> et <span class="text-sky-600 font-bold">Curtis</span> ! 🙏
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 text-center">
+        <div class="container mx-auto px-6">
+            <p class="mb-2">© 2023 Bien dans ta tête, bien dans tes baskets !</p>
+            <p class="text-sm">Illustrations placeholders de Flaticon.com. Adaptez avec vos propres créations !</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+
+        // Smooth scroll for anchor links & close mobile menu
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                    if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                }
+            });
+        });
+
+        // QCM Interactivity
+        document.querySelectorAll('.qcm-container').forEach(qcmContainer => {
+            const options = qcmContainer.querySelectorAll('.qcm-option');
+            const feedbackDiv = qcmContainer.querySelector('.feedback');
+            let answered = false;
+
+            options.forEach(option => {
+                option.addEventListener('click', () => {
+                    if (answered || !feedbackDiv) return;
+                    answered = true;
+                    feedbackDiv.classList.remove('hidden', 'correct', 'incorrect');
+                    options.forEach(opt => opt.disabled = true); // Disable all options in this QCM
+                    option.classList.add('ring-4'); // Highlight clicked option
+
+                    if (option.dataset.correct === 'true') {
+                        feedbackDiv.textContent = '🎉 Bravo, c\'est la bonne réponse !';
+                        feedbackDiv.classList.add('correct');
+                        option.classList.add('ring-green-500');
+                    } else {
+                        feedbackDiv.textContent = '🤔 Hum... La bonne réponse est mise en évidence !';
+                        feedbackDiv.classList.add('incorrect');
+                        option.classList.add('ring-red-500');
+                        // Highlight the correct answer
+                        options.forEach(opt => {
+                            if (opt.dataset.correct === 'true') {
+                                // Using !important for Tailwind might be needed if specificity is an issue
+                                // but direct class addition should work.
+                                opt.classList.add('!bg-green-300', 'text-black', 'font-bold', 'ring-2', 'ring-green-600');
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
